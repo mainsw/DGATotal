@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block metas %}
+    {{ super() }}
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+{% endblock %}
+
+{% block styles %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <br>
+        <center><h2 class="display-4">DGATotal - AI Based DGA Prediction</h2></center>
+        
+        <hr>
+        <form method="post">
+            {{ form.csrf_token }}
+            <div class="form-group">
+                <center><b> {{ form.domain.label }} </b></center>
+                {% if form.domain.errors %}
+                    {{ form.domain(class='form-control is-invalid') }}
+                    {% for error in form.domain.errors %}
+                        <div class="invalid-feedback">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    {{ form.domain(class='form-control') }}
+                {% endif %}
+            </div>
+            <center><a href="https://dgatotal.tk/api/docs" target="_blank" class="btn btn-dark mr-3" role="button">API</a>{{ form.submit(class='btn btn-info mr-3') }}
+                
+            </center>
+            {% if show_predictions_modal %}
+                <h4>Prediction</h4>
+                <p></p>
+                <hr>
+                <p></p>
+                <center>
+                    {{ form.domain.data }} is 
+                    <b>{{ form.prediction }}</b> </center>
+                <p></p>
+                <h4>WHOIS Data</h4>
+                <p></p>
+                <hr>
+                <p></p>
+                {% if form.whois['registrar'] %}
+                    <center>
+                        Registrar: <b>{{ form.whois['registrar'] }}</b> </center>
+                    <p></p>
+                    {% if form.whois['creation_date'] %}
+                        <center>
+                            Creation Date: <b>{{ form.whois['creation_date']}}</b> </center>
+                        <p></p>
+                    {% endif %}
+                    {% if form.whois['expiration_date'] %}
+                        <center>
+                            Expiration Date: <b>{{ form.whois['expiration_date']}}</b> </center>
+                        <p></p>
+                    {% endif %}
+                    {% if form.whois['updated_date'] %}
+                        <center>
+                            Updated Date: <b>{{ form.whois['updated_date'] }}</b> </center>
+                        <p></p>
+                    {% endif %}
+                    {% if form.whois['name_servers'] %}
+                        <center>
+                            Name Servers: <b>{{ form.whois['name_servers'] }}</b> </center>
+                        <p></p>
+                    {% endif %}
+                    {% if form.ip %}
+                    <center>
+                            IP Address: <b>{{ form.ip }}</b> </center>
+                    <p></p>
+                    {% endif %}
+                    {% if form.whoisIP['country'] %}
+                        <center>
+                            IP Country: <b>{{ form.whoisIP['country'] }}</b> </center>
+                        <p></p>
+                    {% endif %}
+                {% else %}
+                    <center>WHOIS 데이터가 없습니다.</center>
+                    <p></p>
+                {% endif %}
+                <hr>
+                <p></p>
+                <center><input class="btn btn-primary" type="button" onclick="window.open('https://www.virustotal.com/gui/domain/{{ form.domain.data }}');" value="VirusTotal"></center>
+            {% endif %}
+        </form>
+    </div>
+{% endblock %}
+
+{% block footer %}{% endblock %}
